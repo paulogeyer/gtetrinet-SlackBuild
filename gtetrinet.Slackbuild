@@ -1,0 +1,69 @@
+#!/bin/sh -e
+# Paulo Geyer revision date 06/06/2014
+
+PRGNAM=gtetrinet
+VERSION=${VERSION:-0.7.11}
+TAG=${TAG:-_SBo}
+BUILD=${BUID:-1}
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+    *) ARCH=$( uname -m ) ;;
+  esac
+fi
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp/SBo}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i486" ]; then
+	SLKFLAGS="-O2 -march=486 -mtune=i686"
+	LIBDIRSUFFIX=""
+elif [ "$ARCH" = "x86_64" ]; then
+	SLKFLAGS="-O2 -fPIC"
+	LIBDIRSUFFIX="64"
+else
+	SLKFLAGS="-O2"
+	LIBDIRSUFFIX=""
+fi
+
+set -e # exit on error
+
+rm -rf $PKG
+mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar zxpvf $CWD/$PRGNAM-$VERSION.tar.gz
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+CFLAGS="$SLKCFLAGS" \
+	./configure \
+	--prefix=/usr \
+	--sysconfdir=/etc \
+	--localstatedir=/var \
+	--build=$ARCH-slackware-linux \
+	--host=$ARCH-slackware-linux 
+
+make
+make install DESTDIR=$PKG
+
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+
+# if [ -e $CWD/doinst.sh.gz ]; then
+#   zcat $CWD/doinst.sh.gz > $PKG/install/doinst.sh
+# fi
+
+# strip gtetrinet
+strip --strip-unneeded $PKG/usr/games/gtetrinet
+
+# gzip manpages
+gzip -9 $PKG/usr/share/man/man*/*.*
+
+cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+

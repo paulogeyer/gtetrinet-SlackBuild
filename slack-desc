@@ -1,0 +1,12 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+gtetrinet: GTetrinet (Tetrinet Client for GNOME)
+gtetrinet: GTetrinet is a client program for the popular Tetrinet game,
+gtetrinet: a multiplayer tetris game that is played over the internet.
+gtetrinet: (If you don't know what Tetrinet is, check out tetrinet.org)
